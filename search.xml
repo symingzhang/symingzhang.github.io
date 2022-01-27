@@ -44,6 +44,27 @@
     </entry>
     
     
+    
+    <entry>
+      <title>系统设计之用例图</title>
+      <link href="/page/b1cf2a20.html"/>
+      <url>/page/b1cf2a20.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="系统设计之用例图"><a href="#系统设计之用例图" class="headerlink" title="系统设计之用例图"></a>系统设计之用例图</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>主要用于需求分析阶段，从用户的角度描述系统功能，并通过图例说明用户与系统功能、功能之间、用户之间的关系。</p><blockquote><p>在需求分析阶段，如果与系统交互的 User 超过一类并且相关的 User Case 超过 5 个，<br>使用用例图来表达更加清晰的结构化需求。——《阿里巴巴开发手册》</p></blockquote><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>概况来说主要有四种元素：角色、用例、关系；</p><p><em>注：以下图示通过Visio 2013生成，通过描述在12306购票部分需求进行解释说明。</em></p><p><strong>角色</strong>：也称为用户，执行者、参与者等，指的是与系统进行交互的用户、组织或外部系统，用一个人型图标表示：</p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127172621391.png" alt="image-20220127172621391"></p><p><strong>用例</strong>：指的是系统功能，用一个椭圆图标表示：</p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127172644390.png" alt="image-20220127172644390"></p><p><strong>子系统</strong>：表示系统的某一个功能或模块，通常这些功能存在紧密联系，用矩形表示；</p><p><strong>关系</strong>：指的是用户之间、用户与用例之间、用例之间的联系，用例图中涉及的关系有：关联、泛化、包含、扩展，如下表所示：</p><div class="table-container"><table><thead><tr><th>关系类型</th><th>说明</th><th>标识符号</th></tr></thead><tbody><tr><td>关联</td><td>用户与用例之间的关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image002.gif" alt="img"></td></tr><tr><td>泛化</td><td>用户之间或者用例之间的关系，可以理解为集成关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image004.gif" alt="img"></td></tr><tr><td>包含</td><td>用例之间的关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image006.gif" alt="img"></td></tr><tr><td>扩展</td><td>用例之间的关系</td><td><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/clip_image008.gif" alt="img"></td></tr></tbody></table></div><p><strong>实例：</strong></p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127193409604.png" alt="image-20220127193409604"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> UML </tag>
+            
+            <tag> 用例图 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
   
   
 </search>

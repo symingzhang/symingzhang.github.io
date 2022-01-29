@@ -4,6 +4,50 @@
   
     
     <entry>
+      <title>导出数据GET请求改为POST</title>
+      <link href="/page/29695062.html"/>
+      <url>/page/29695062.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="导出数据GET请求改为POST"><a href="#导出数据GET请求改为POST" class="headerlink" title="导出数据GET请求改为POST"></a>导出数据GET请求改为POST</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>导出数据时，发现利用<em>document.location.href</em> 导出数据时，前台传递的主键ID过长导致报错。</p><blockquote><p>用的是IE浏览器<em>（老古董了😂）</em>，<strong>IE对URL的最大限制为2083个字符，若超出这个数字，提交按钮没有任何反应</strong>。</p><p>于是乎就想到了利用POST方式去下载，思路：点击按钮时，利用Form自动提交。</p></blockquote><h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、找了个对post请求的封装：</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">post</span>(<span class="params">url, params</span>) </span>&#123; </span><br><span class="line">    <span class="comment">// 创建form元素</span></span><br><span class="line">    <span class="keyword">var</span> temp_form = <span class="built_in">document</span>.createElement(<span class="string">&quot;form&quot;</span>);</span><br><span class="line">    <span class="comment">// 设置form属性</span></span><br><span class="line">    temp_form .action = url;      </span><br><span class="line">    temp_form .target = <span class="string">&quot;_self&quot;</span>;</span><br><span class="line">    temp_form .method = <span class="string">&quot;post&quot;</span>;      </span><br><span class="line">    temp_form .style.display = <span class="string">&quot;none&quot;</span>;</span><br><span class="line">    <span class="comment">// 处理需要传递的参数 </span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> x <span class="keyword">in</span> params) &#123; </span><br><span class="line">        <span class="keyword">var</span> opt = <span class="built_in">document</span>.createElement(<span class="string">&quot;textarea&quot;</span>);      </span><br><span class="line">        opt.name = x;      </span><br><span class="line">        opt.value = params[x];      </span><br><span class="line">        temp_form .appendChild(opt);      </span><br><span class="line">    &#125;      </span><br><span class="line">    <span class="built_in">document</span>.body.appendChild(temp_form);</span><br><span class="line">    <span class="comment">// 提交表单      </span></span><br><span class="line">    temp_form .submit();     </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">原文链接：https:<span class="comment">//www.cnblogs.com/zzt-lovelinlin/p/11461097.html</span></span><br><span class="line"></span><br><span class="line"><span class="number">2</span>、组装调用即可params调用即可，如下：</span><br><span class="line"><span class="keyword">var</span> url = <span class="string">&quot;XXXXXX/XXX&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> ids = <span class="string">&#x27;XXXXX,12XXXX,......&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> params = &#123;</span><br><span class="line">    <span class="attr">ids</span>: ids</span><br><span class="line">&#125;,</span><br><span class="line">post(url, params);</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> GET </tag>
+            
+            <tag> POST </tag>
+            
+            <tag> JS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>系统设计之用例图</title>
+      <link href="/page/b1cf2a20.html"/>
+      <url>/page/b1cf2a20.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="系统设计之用例图"><a href="#系统设计之用例图" class="headerlink" title="系统设计之用例图"></a>系统设计之用例图</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>主要用于需求分析阶段，从用户的角度描述系统功能，并通过图例说明用户与系统功能、功能之间、用户之间的关系。</p><blockquote><p>在需求分析阶段，如果与系统交互的 User 超过一类并且相关的 User Case 超过 5 个，<br>使用用例图来表达更加清晰的结构化需求。——《阿里巴巴开发手册》</p></blockquote><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>概况来说主要有四种元素：角色、用例、关系；</p><p><em>注：以下图示通过Visio 2013生成，通过描述在12306购票部分需求进行解释说明。</em></p><p><strong>角色</strong>：也称为用户，执行者、参与者等，指的是与系统进行交互的用户、组织或外部系统，用一个人型图标表示：</p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127172621391.png" alt="image-20220127172621391"></p><p><strong>用例</strong>：指的是系统功能，用一个椭圆图标表示：</p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127172644390.png" alt="image-20220127172644390"></p><p><strong>子系统</strong>：表示系统的某一个功能或模块，通常这些功能存在紧密联系，用矩形表示；</p><p><strong>关系</strong>：指的是用户之间、用户与用例之间、用例之间的联系，用例图中涉及的关系有：关联、泛化、包含、扩展，如下表所示：</p><div class="table-container"><table><thead><tr><th>关系类型</th><th>说明</th><th>标识符号</th></tr></thead><tbody><tr><td>关联</td><td>用户与用例之间的关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image002.gif" alt="img"></td></tr><tr><td>泛化</td><td>用户之间或者用例之间的关系，可以理解为集成关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image004.gif" alt="img"></td></tr><tr><td>包含</td><td>用例之间的关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image006.gif" alt="img"></td></tr><tr><td>扩展</td><td>用例之间的关系</td><td><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/clip_image008.gif" alt="img"></td></tr></tbody></table></div><p><strong>实例：</strong></p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127193409604.png" alt="image-20220127193409604"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> UML </tag>
+            
+            <tag> 用例图 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MySql实现Excel的RoundUP和RoundDown函数</title>
       <link href="/page/ca75fcca.html"/>
       <url>/page/ca75fcca.html</url>
@@ -38,27 +82,6 @@
             <tag> Mysql </tag>
             
             <tag> Excel </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>系统设计之用例图</title>
-      <link href="/page/b1cf2a20.html"/>
-      <url>/page/b1cf2a20.html</url>
-      
-        <content type="html"><![CDATA[<h2 id="系统设计之用例图"><a href="#系统设计之用例图" class="headerlink" title="系统设计之用例图"></a>系统设计之用例图</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>主要用于需求分析阶段，从用户的角度描述系统功能，并通过图例说明用户与系统功能、功能之间、用户之间的关系。</p><blockquote><p>在需求分析阶段，如果与系统交互的 User 超过一类并且相关的 User Case 超过 5 个，<br>使用用例图来表达更加清晰的结构化需求。——《阿里巴巴开发手册》</p></blockquote><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>概况来说主要有四种元素：角色、用例、关系；</p><p><em>注：以下图示通过Visio 2013生成，通过描述在12306购票部分需求进行解释说明。</em></p><p><strong>角色</strong>：也称为用户，执行者、参与者等，指的是与系统进行交互的用户、组织或外部系统，用一个人型图标表示：</p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127172621391.png" alt="image-20220127172621391"></p><p><strong>用例</strong>：指的是系统功能，用一个椭圆图标表示：</p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127172644390.png" alt="image-20220127172644390"></p><p><strong>子系统</strong>：表示系统的某一个功能或模块，通常这些功能存在紧密联系，用矩形表示；</p><p><strong>关系</strong>：指的是用户之间、用户与用例之间、用例之间的联系，用例图中涉及的关系有：关联、泛化、包含、扩展，如下表所示：</p><div class="table-container"><table><thead><tr><th>关系类型</th><th>说明</th><th>标识符号</th></tr></thead><tbody><tr><td>关联</td><td>用户与用例之间的关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image002.gif" alt="img"></td></tr><tr><td>泛化</td><td>用户之间或者用例之间的关系，可以理解为集成关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image004.gif" alt="img"></td></tr><tr><td>包含</td><td>用例之间的关系</td><td><img src="file:///C:\Users\ZHANGX~1.IT\AppData\Local\Temp\msohtmlclip1\01\clip_image006.gif" alt="img"></td></tr><tr><td>扩展</td><td>用例之间的关系</td><td><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/clip_image008.gif" alt="img"></td></tr></tbody></table></div><p><strong>实例：</strong></p><p><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/image-20220127193409604.png" alt="image-20220127193409604"></p>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> UML </tag>
-            
-            <tag> 用例图 </tag>
             
         </tags>
       

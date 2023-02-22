@@ -1,0 +1,225 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>MySql实现Excel的RoundUP和RoundDown函数 | Youan 小栈</title><meta name="author" content="Youan"><meta name="copyright" content="Youan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Mysql自定义存储函数RoundUp说明RoundUP是指：保留N位小数，并向上取值。 主要是利用Mysql的Round四舍五入函数，对于保留n位小数的，原值加 0.5 * 0.1^n，然后执行Round进行四舍五入；  对于保留1位小数，原值加0.05后，执行Round函数； 对于保留2位小数，原值加0.005后，执行Round函数； ……  语法Excel_Floor(number, num">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySql实现Excel的RoundUP和RoundDown函数">
+<meta property="og:url" content="http://www.17win.xyz/page/379c5c43.html">
+<meta property="og:site_name" content="Youan 小栈">
+<meta property="og:description" content="Mysql自定义存储函数RoundUp说明RoundUP是指：保留N位小数，并向上取值。 主要是利用Mysql的Round四舍五入函数，对于保留n位小数的，原值加 0.5 * 0.1^n，然后执行Round进行四舍五入；  对于保留1位小数，原值加0.05后，执行Round函数； 对于保留2位小数，原值加0.005后，执行Round函数； ……  语法Excel_Floor(number, num">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png">
+<meta property="article:published_time" content="2023-02-22T01:50:19.000Z">
+<meta property="article:modified_time" content="2023-02-22T01:55:07.154Z">
+<meta property="article:author" content="Youan">
+<meta property="article:tag" content="Mysql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png"><link rel="shortcut icon" href="/assets/img/favicon.ico"><link rel="canonical" href="http://www.17win.xyz/page/379c5c43.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySql实现Excel的RoundUP和RoundDown函数',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-22 09:55:07'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/assets/css/customer.css"><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/assets/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Youan 小栈"><span class="site-name">Youan 小栈</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">MySql实现Excel的RoundUP和RoundDown函数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-02-22T01:50:19.000Z" title="发表于 2023-02-22 09:50:19">2023-02-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-22T01:55:07.154Z" title="更新于 2023-02-22 09:55:07">2023-02-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">457</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span id="" data-flag-title="MySql实现Excel的RoundUP和RoundDown函数"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span class="waline-pageview-count" data-path="/page/379c5c43.html"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><h2 id="Mysql自定义存储函数RoundUp"><a href="#Mysql自定义存储函数RoundUp" class="headerlink" title="Mysql自定义存储函数RoundUp"></a>Mysql自定义存储函数RoundUp</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>RoundUP是指：保留N位小数，并向上取值。</p>
+<p>主要是利用Mysql的Round四舍五入函数，对于保留n位小数的，原值加 <u><code>0.5 * 0.1^n</code></u>，然后执行Round进行四舍五入；</p>
+<ol>
+<li>对于保留1位小数，原值加0.05后，执行Round函数；</li>
+<li>对于保留2位小数，原值加0.005后，执行Round函数；</li>
+<li>……</li>
+</ol>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>Excel_Floor(number, num_digits)</p>
+<p>函数语法具有下列参数：</p>
+<ul>
+<li><strong>Number</strong>  必需项，Double类型。 要舍入的数值。</li>
+<li><strong>num_digits</strong> 必需项，INT类型。 要保留的位数。</li>
+</ul>
+<p>函数返回值：</p>
+<ul>
+<li><strong>Result</strong> Double类型，如果不合法则返回NULL或异常；</li>
+</ul>
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><ul>
+<li>ROUNDUP 的行为与 ROUND 相似，所不同的是它始终将数字进行向上舍入。</li>
+<li>如果 num_digits 大于 0（零），则将数字向上舍入到指定的小数位数。</li>
+<li>如果 num_digits 为 0，则将数字向上舍入到最接近的整数。</li>
+<li>如果 num_digits 小于 0，则将数字向上舍入到小数点左边的相应位数。</li>
+</ul>
+<h3 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> `ROUNDUP`(`number` <span class="keyword">double</span>,`num_digits` <span class="type">int</span>)</span><br><span class="line"> <span class="keyword">RETURNS</span> <span class="keyword">double</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		函数作用：向上去舍，并保留对应的位数</span></span><br><span class="line"><span class="comment">		规则： </span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="keyword">RETURN</span> round(number <span class="operator">+</span> round(<span class="built_in">POWER</span>(<span class="number">0.1</span>, num_digits), num_digits)<span class="operator">*</span><span class="number">0.5</span> , num_digits);</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Mysql自定义存储函数RoundDown"><a href="#Mysql自定义存储函数RoundDown" class="headerlink" title="Mysql自定义存储函数RoundDown"></a>Mysql自定义存储函数RoundDown</h2><h3 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h3><p>RoundDown是指：保留N位小数，并向下取值。</p>
+<p>主要是利用Mysql的Round四舍五入函数，对于保留n位小数的，原值减去 <u><code>0.5 * 0.1^n</code></u>，然后执行Round进行四舍五入；</p>
+<ol>
+<li>对于保留1位小数，原值减去0.05后，执行Round函数；</li>
+<li>对于保留2位小数，原值减去0.005后，执行Round函数；</li>
+<li>……</li>
+</ol>
+<h3 id="实现代码-1"><a href="#实现代码-1" class="headerlink" title="实现代码"></a>实现代码</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> `ROUNDDOWN`(`number` <span class="keyword">double</span>,`num_digits` <span class="type">int</span>)</span><br><span class="line"> <span class="keyword">RETURNS</span> <span class="keyword">double</span></span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		函数作用：向下去舍，并保留对应的位数</span></span><br><span class="line"><span class="comment">		规则： </span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	<span class="keyword">RETURN</span> round(number <span class="operator">-</span> round(<span class="built_in">POWER</span>(<span class="number">0.1</span>, num_digits), num_digits) <span class="operator">*</span> <span class="number">0.5</span> , num_digits);</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="EXCEL函数解析RoundUP"><a href="#EXCEL函数解析RoundUP" class="headerlink" title="EXCEL函数解析RoundUP"></a><em><a target="_blank" rel="noopener" href="https://support.microsoft.com/zh-cn/office/roundup-%E5%87%BD%E6%95%B0-f8bc9b23-e795-47db-8703-db171d0c42a7">EXCEL函数解析RoundUP</a></em></h2></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://www.17win.xyz">Youan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://www.17win.xyz/page/379c5c43.html">http://www.17win.xyz/page/379c5c43.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://www.17win.xyz" target="_blank">Youan 小栈</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Mysql/">Mysql</a></div><div class="post_share"><div class="social-share" data-image="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/page/aa00a7cf.html" title="Git SSH多服务器秘钥配置教程"><img class="cover" src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/1677056251933.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Git SSH多服务器秘钥配置教程</div></div></a></div><div class="next-post pull-right"><a href="/page/94430be3.html" title="MySql实现Excel的Floor函数"><img class="cover" src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySql实现Excel的Floor函数</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/page/94430be3.html" title="MySql实现Excel的Floor函数"><img class="cover" src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-22</div><div class="title">MySql实现Excel的Floor函数</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/assets/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Youan</div><div class="author-info__description">在我的后园，可以看见墙外有两株树，一株是枣树，还有一株也是枣树。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/symingzhang"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0RoundUp"><span class="toc-number">1.</span> <span class="toc-text">Mysql自定义存储函数RoundUp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E6%B3%A8"><span class="toc-number">1.3.</span> <span class="toc-text">备注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">实现代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0RoundDown"><span class="toc-number">2.</span> <span class="toc-text">Mysql自定义存储函数RoundDown</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E-1"><span class="toc-number">2.1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81-1"><span class="toc-number">2.2.</span> <span class="toc-text">实现代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EXCEL%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90RoundUP"><span class="toc-number">3.</span> <span class="toc-text">EXCEL函数解析RoundUP</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/page/aa00a7cf.html" title="Git SSH多服务器秘钥配置教程"><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/1677056251933.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Git SSH多服务器秘钥配置教程"/></a><div class="content"><a class="title" href="/page/aa00a7cf.html" title="Git SSH多服务器秘钥配置教程">Git SSH多服务器秘钥配置教程</a><time datetime="2023-02-22T02:11:25.000Z" title="发表于 2023-02-22 10:11:25">2023-02-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/page/379c5c43.html" title="MySql实现Excel的RoundUP和RoundDown函数"><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySql实现Excel的RoundUP和RoundDown函数"/></a><div class="content"><a class="title" href="/page/379c5c43.html" title="MySql实现Excel的RoundUP和RoundDown函数">MySql实现Excel的RoundUP和RoundDown函数</a><time datetime="2023-02-22T01:50:19.000Z" title="发表于 2023-02-22 09:50:19">2023-02-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/page/94430be3.html" title="MySql实现Excel的Floor函数"><img src="https://17win-blog.oss-cn-beijing.aliyuncs.com/img/mysql.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySql实现Excel的Floor函数"/></a><div class="content"><a class="title" href="/page/94430be3.html" title="MySql实现Excel的Floor函数">MySql实现Excel的Floor函数</a><time datetime="2023-02-22T01:50:00.000Z" title="发表于 2023-02-22 09:50:00">2023-02-22</time></div></div></div></div></div></div></main><footer id="footer" style="background: url(/assets/img/footer.jfif)"><div id="footer-wrap"><div class="copyright">&copy;2023 By Youan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadWaline () {
+  function initWaline () {
+    const waline = Waline.init(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline.17win.xyz/',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+  }
+
+  if (typeof Waline === 'object') initWaline()
+  else {
+    getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css').then(() => {
+      getScript('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js').then(initWaline)
+    })
+  }
+}
+
+if ('Waline' === 'Waline' || !false) {
+  if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+  else setTimeout(loadWaline, 0)
+} else {
+  function loadOtherComment () {
+    loadWaline()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
